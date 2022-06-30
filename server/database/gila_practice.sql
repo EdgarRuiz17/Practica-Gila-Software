@@ -1,7 +1,9 @@
 -- create daatabase
+
 CREATE DATABASE gila_practice;
 
 -- using the database
+
 USE gila_practice;
 
 -- creating table category
@@ -25,7 +27,7 @@ CREATE TABLE IF NOT EXISTS `product` (
     PRIMARY KEY (`product_id`),
     UNIQUE KEY `product_id_UNIQUE` (`product_id`),
     CONSTRAINT `fk_category_product_id` FOREIGN KEY (`fk_category`) REFERENCES `category` (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT= 2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT= 1 DEFAULT CHARSET=utf8;
 
 -- creating table attributes
 
@@ -37,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `attributes` (
     PRIMARY KEY (`attributes_id`),
     UNIQUE KEY `attributes_id_UNIQUE` (`attributes_id`),
     CONSTRAINT `fk_category_attributes_id` FOREIGN KEY (`fk_category`) REFERENCES `category` (`category_id`)
-) ENGINE=InnoDB AUTO_INCREMENT= 3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT= 1 DEFAULT CHARSET=utf8;
 
 -- creating table attributes_product
 
@@ -50,4 +52,33 @@ CREATE TABLE IF NOT EXISTS `attributes_product` (
     UNIQUE KEY `att_prod_id_UNIQUE` (`att_prod_id`),
     CONSTRAINT `fk_product_id` FOREIGN KEY (`fk_product`) REFERENCES `product` (`product_id`),
     CONSTRAINT `fk_attributes_id` FOREIGN KEY (`fk_attributes`) REFERENCES `attributes` (`attributes_id`)
-) ENGINE=InnoDB AUTO_INCREMENT= 4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT= 1 DEFAULT CHARSET=utf8;
+
+-- inserting categories
+
+INSERT INTO `category` (`category_name`) VALUES
+  ('TV'),
+  ('laptop'),
+  ('Shoes');
+
+  -- inserting test products
+
+INSERT INTO `product` (`product_name`, `product_sku`,`product_brand`,`product_cost`,`fk_category`) VALUES 
+('Samsung 4k','3','Samsung','8000.00','3');
+
+-- inserting test attributes
+
+INSERT INTO `attributes` ( `attribute_name`, `attribute_units`, `fk_category`) VALUES
+  ('tipo de pantalla', '', '1'),
+  ('tamaño pantalla', 'inches', '1'),
+  ('procesador', '', '2'),
+  ('RAM', 'GB','2'),
+  ('material', '', '3'),
+  ('numero/tamaño', 'inches','3');
+
+-- inserting test product attributes
+
+INSERT INTO `attributes_product` ( `fk_product`, `fk_attributes`, `value`) VALUES
+  ('1', '1', 'LED'),
+  ('1', '2', '50');
+
