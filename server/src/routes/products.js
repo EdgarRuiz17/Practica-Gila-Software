@@ -2,8 +2,12 @@ const { Router } = require('express');
 
 const router = new Router();
 
-router.get('/', (req, res) => {
-    res.send('Se accedio')
-});  
+const customerController = require('../controllers/productController');
+
+router.get('/', customerController.list);
+router.post('/add', customerController.save);
+router.get('/update/:id', customerController.edit);
+router.post('/update/:id', customerController.update);
+router.get('/delete/:id', customerController.delete);
 
 module.exports = router;

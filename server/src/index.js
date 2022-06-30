@@ -23,7 +23,7 @@ app.use(myConnection(mysql, {
 
 // routes
 
-app.use('/api/products', customerRoutes);
+app.use('/', customerRoutes);
 
 // starting the server
 app.listen(app.get('port'), () => {
