@@ -3,12 +3,12 @@ const controller = {};
 controller.list = (req, res) => {
   req.getConnection((err, conn) => {
     conn.query(`
-        SELECT p.product_id, p.product_name, a.attribute_name, ap.value, a.attribute_units 
-        FROM attributes_product ap
+        SELECT p.product_id, p.product_name, ap.attribute_category, c.category_name
+        FROM attributes ap
         INNER JOIN product p
         ON ap.fk_product = p.product_id
-        INNER JOIN attributes a
-        ON ap.fk_attributes = a.attributes_id;`, (err, products) => {
+        INNER JOIN category c
+        ON p.fk_category = c.category_id;`, (err, products) => {
      if (err) {
       res.json(err);
      }
