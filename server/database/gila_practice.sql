@@ -61,7 +61,7 @@ INSERT INTO `product` (`product_name`, `product_sku`,`product_brand`,`product_co
 INSERT INTO `attributes` ( `attribute_category`, `fk_product`) VALUES
   ('{"screen": "LED", "size": "40"}', '1'),
   ('{"screen": "LCD", "size": "60"}', '2'),
-  ('{"CPU": "AMD", "RAM": "40"}', '3'),
+  ('{"CPU": "AMD", "RAM": "8GB"}', '3'),
   ('{"material": "Leather", "number": "27"}', '4');
 
 
