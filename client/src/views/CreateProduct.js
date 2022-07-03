@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
+import { Link } from 'react-router-dom';
 import axios from 'axios'
 
 //Icons
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle, faHandPointUp, faExclamation } from '@fortawesome/free-solid-svg-icons';
+import { faExclamationTriangle, faHandPointUp, faExclamation, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 //Url API
 import { base_url } from '../Url';
@@ -13,6 +14,7 @@ import ProductInput from '../components/ProductInput';
 
 //styled components
 import { Select, Label, GroupInput, Button, ErrorMessage, SuccessMessage, DuplicatedMessage } from '../styles/FormStyles'
+
 
 const CreateProduct = () => {
     const [product, setProduct] = useState({ value: "", flag: null });
@@ -130,12 +132,12 @@ const CreateProduct = () => {
     return (
         <div className='container'>
             <div className='d-flex'>
-                <Button type="submit" className='mt-4 w-25'>
-                    Back
-                </Button>
+                <Link className='btn btn-dark mt-4' to="/">
+                    <FontAwesomeIcon icon={faArrowLeft}/>
+                </Link>
             </div>
             <div className='card mt-4'>
-                <div class="card-header">
+                <div className="card-header">
                     Create new product
                 </div>
                 <ul className='list-group list-group-flush'>
@@ -197,10 +199,10 @@ const CreateProduct = () => {
                     </li>
                 </ul>
             </div>
-            <div class="row mt-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Unique attributes</h5>
+            <div className="row mt-4">
+                <div className="card">
+                    <div className="card-body">
+                        <h5 className="card-title">Unique attributes</h5>
                         <li className='list-group-item d-flex justify-content-center align-items-center'>
                             {category === "1" &&
                                 <>
