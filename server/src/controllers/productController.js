@@ -3,7 +3,7 @@ const controller = {};
 controller.list = (req, res) => {
   req.getConnection((err, conn) => {
     conn.query(`
-        SELECT p.product_id, p.product_name, ap.attribute_category, c.category_name
+        SELECT p.product_id, p.product_name, ap.attribute_category, c.category_name, ap.attributes_id, p.product_cost, p.product_brand, p.product_sku
         FROM attributes ap
         INNER JOIN product p
         ON ap.fk_product = p.product_id
@@ -110,8 +110,23 @@ controller.update = (req, res) => {
 controller.delete = (req, res) => {
   const { id } = req.params;
   req.getConnection((err, connection) => {
-    connection.query('DELETE FROM product WHERE id = ?', [id], (err, rows) => {
-      res.redirect('/');
+    connection.query('DELETE FROM product WHERE product_id = ?', [id], (err, rows) => {
+      res.json({
+        message: "Deleted product",
+        status: 200
+      })
+    });
+  });
+}
+
+controller.deleteAttributes = (req, res) => {
+  const { id } = req.params;
+  req.getConnection((err, connection) => {
+    connection.query('DELETE FROM attributes WHERE attributes_id = ?', [id], (err, rows) => {
+      res.json({
+        message: "Deleted attributes",
+        status: 200
+      })
     });
   });
 }
