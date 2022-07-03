@@ -3,14 +3,16 @@ const mysql = require('mysql');
 const myConnection = require('express-myconnection');
 const morgan = require('morgan');
 const app = express();
+const cors = require('cors')
 
 //importing routes
 const customerRoutes = require('./routes/products');
 
 // settings
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 9000);
 
 // middlewares
+app.use(cors())
 app.use(morgan('dev'));
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());

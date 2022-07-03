@@ -3,12 +3,12 @@ const controller = {};
 controller.list = (req, res) => {
   req.getConnection((err, conn) => {
     conn.query(`
-        SELECT p.product_id, p.product_name, a.attribute_name, ap.value, a.attribute_units 
-        FROM attributes_product ap
+        SELECT p.product_id, p.product_name, ap.attribute_category, c.category_name, ap.attributes_id, p.product_cost, p.product_brand, p.product_sku
+        FROM attributes ap
         INNER JOIN product p
         ON ap.fk_product = p.product_id
-        INNER JOIN attributes a
-        ON ap.fk_attributes = a.attributes_id;`, (err, products) => {
+        INNER JOIN category c
+        ON p.fk_category = c.category_id;`, (err, products) => {
      if (err) {
       res.json(err);
      }
@@ -22,13 +22,70 @@ controller.save = (req, res) => {
   const data = req.body;
   console.log(req.body)
   req.getConnection((err, connection) => {
-    const query = connection.query('INSERT INTO products set ?', data, (err, product) => {
-      console.log(product)
-      res.redirect('/');
+    const query = connection.query('INSERT INTO product set ?', data, (err, product) => {
+      if (err) {
+        res.json(err);
+      }
+      res.json(
+              {
+                message: "product created successfully.",
+                status: 200,
+                id: product.insertId
+              }
+            );
+          }
+        )
     })
-  })
 };
 
+controller.saveAttributes = (req, res) => {
+  const data = req.body;
+  console.log(req.body)
+  req.getConnection((err, connection) => {
+      const insertAttributes = connection.query('INSERT INTO attributes set ?', data , (err, attribute) => {
+      if (err) {
+          res.json(err);
+      }
+      res.json(
+              {
+                message: "attributes added successfully.",
+                status: 200,
+              }
+            );
+          }
+        )
+    })
+}
+
+controller.listSKU = (req, res) => {
+  const { id } = req.params;
+  req.getConnection((err, conn) => {
+    conn.query(`
+        SELECT *
+        FROM product WHERE product_sku = ?`,[id], (err, products) => {
+     if (err) {
+      res.json(err);
+     }
+     if(products.length !== 0){
+            res.json(
+              {
+                message: "the product SKU it`s duplicated.",
+                status: 404,
+                response: false
+              }
+            );
+     }else{
+      res.json(
+        {
+          message: "SKU correct.",
+          status: 200,
+          response: true
+        }
+      );
+     }
+    });
+  });
+};
 
 controller.edit = (req, res) => {
   const { id } = req.params;
@@ -53,8 +110,23 @@ controller.update = (req, res) => {
 controller.delete = (req, res) => {
   const { id } = req.params;
   req.getConnection((err, connection) => {
-    connection.query('DELETE FROM product WHERE id = ?', [id], (err, rows) => {
-      res.redirect('/');
+    connection.query('DELETE FROM product WHERE product_id = ?', [id], (err, rows) => {
+      res.json({
+        message: "Deleted product",
+        status: 200
+      })
+    });
+  });
+}
+
+controller.deleteAttributes = (req, res) => {
+  const { id } = req.params;
+  req.getConnection((err, connection) => {
+    connection.query('DELETE FROM attributes WHERE attributes_id = ?', [id], (err, rows) => {
+      res.json({
+        message: "Deleted attributes",
+        status: 200
+      })
     });
   });
 }
