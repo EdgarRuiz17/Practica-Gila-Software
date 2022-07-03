@@ -11,5 +11,6 @@ router.get('/sku/:id', productController.listSKU);
 router.get('/update/:id', productController.edit);
 router.post('/update/:id', productController.update);
 router.get('/delete/:id', productController.delete);
+router.get('/delete/attributes/:id', productController.deleteAttributes);
 
 module.exports = router;
