@@ -2,7 +2,7 @@ import React, { useReducer, createContext } from "react";
 import axios from "axios";
 import ProductReducer from "./ProductReducer";
 import { base_url } from "../Url";
-import { GET_PRODUCTS, SET_ATTRIBUTES } from "./types";
+import { GET_PRODUCTS } from "./types";
 
 export const ProductContext = createContext();
 
