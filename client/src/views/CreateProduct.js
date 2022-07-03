@@ -105,9 +105,9 @@ const CreateProduct = () => {
         var name2 = attribute1.name;
         var union = attribute2.value;
         if(category === "2"){
-            var union = attribute2.value+attribute3.value;
+            union = attribute2.value+attribute3.value;
         }else if(category === "3"){
-            var union = attribute2.value+attribute4.value;
+            union = attribute2.value+attribute4.value;
         }
 
         var AttributesInsert = 
