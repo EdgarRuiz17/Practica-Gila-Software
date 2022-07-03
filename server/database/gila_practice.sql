@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS `product` (
     `fk_category` INT(6) UNSIGNED NOT NULL,
     PRIMARY KEY (`product_id`),
     UNIQUE KEY `product_id_UNIQUE` (`product_id`),
+    UNIQUE KEY `product_sku_UNIQUE` (`product_sku`),
     CONSTRAINT `fk_category_product_id` FOREIGN KEY (`fk_category`) REFERENCES `category` (`category_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT= 1 DEFAULT CHARSET=utf8;
 
