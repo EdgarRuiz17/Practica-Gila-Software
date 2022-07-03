@@ -7,7 +7,6 @@ import Products from '../components/Products'
 const Index = () => {
   return (
     <div>
-        <Header/>
         <section>
             <Products/>
         </section>
