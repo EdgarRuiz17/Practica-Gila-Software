@@ -22,13 +22,70 @@ controller.save = (req, res) => {
   const data = req.body;
   console.log(req.body)
   req.getConnection((err, connection) => {
-    const query = connection.query('INSERT INTO products set ?', data, (err, product) => {
-      console.log(product)
-      res.redirect('/');
+    const query = connection.query('INSERT INTO product set ?', data, (err, product) => {
+      if (err) {
+        res.json(err);
+      }
+      res.json(
+              {
+                message: "product created successfully.",
+                status: 200,
+                id: product.insertId
+              }
+            );
+          }
+        )
     })
-  })
 };
 
+controller.saveAttributes = (req, res) => {
+  const data = req.body;
+  console.log(req.body)
+  req.getConnection((err, connection) => {
+      const insertAttributes = connection.query('INSERT INTO attributes set ?', data , (err, attribute) => {
+      if (err) {
+          res.json(err);
+      }
+      res.json(
+              {
+                message: "attributes added successfully.",
+                status: 200,
+              }
+            );
+          }
+        )
+    })
+}
+
+controller.listSKU = (req, res) => {
+  const { id } = req.params;
+  req.getConnection((err, conn) => {
+    conn.query(`
+        SELECT *
+        FROM product WHERE product_sku = ?`,[id], (err, products) => {
+     if (err) {
+      res.json(err);
+     }
+     if(products.length !== 0){
+            res.json(
+              {
+                message: "the product SKU it`s duplicated.",
+                status: 404,
+                response: false
+              }
+            );
+     }else{
+      res.json(
+        {
+          message: "SKU correct.",
+          status: 200,
+          response: true
+        }
+      );
+     }
+    });
+  });
+};
 
 controller.edit = (req, res) => {
   const { id } = req.params;
