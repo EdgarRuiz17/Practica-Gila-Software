@@ -6,16 +6,18 @@ import {
 import React from "react";
 
 //views
-import Index from "./views/Index";
+import Products from "./views/ShowProducts";
 import Error from "./views/Error";
 import CreateProduct from "./views/CreateProduct";
+
+//Compoents
 import Header from "./components/Header";
 
 
 function App() {
   return (
     <section>
-      <InitialRoutes/>
+      <InitialRoutes />
     </section>
   );
 }
@@ -25,12 +27,12 @@ const InitialRoutes = () => {
   return (
     <div>
       <Router>
-        <Header/>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/create" element={<CreateProduct />} />
-            <Route path="*" element={<Error />} />
-          </Routes>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Products />} />
+          <Route path="/create" element={<CreateProduct />} />
+          <Route path="*" element={<Error />} />
+        </Routes>
       </Router>
     </div>
   );
