@@ -22,7 +22,7 @@ const CreateProduct = () => {
     const [brand, setBrand] = useState({ value: "", flag: null });
     const [cost, setCost] = useState({ value: "", flag: null });
     const [attribute1, setAttribute1] = useState({ value: "", flag: null, name: "" });
-    const [attribute2, setAttribute2] = useState({ value: "", flag: null, name: "" });
+    const [attribute2, setAttribute2] = useState({ value: "LCD", flag: null, name: "screen" });
     const [attribute4, setAttribute4] = useState({ value: "in", flag: null, name: "" });
     const [attribute3, setAttribute3] = useState({ value: "GB", flag: null, name: "" });
 
@@ -32,100 +32,121 @@ const CreateProduct = () => {
 
     const [validationSKU, setValidationSKU] = useState(null);
 
+    const [errorQuery, setError] = useState(null);
+
     const expression = {
         name: /^[a-zA-Z0-9À-ÿ\s]{4,20}$/, // Letters, Numbers and spaces. Min 4 characters and max 20.
         number: /^[1-9]\d{0,7}(?:\.\d{1,4})?$/, // 1 to 7 numbers, can add decimals.
         sku: /^(?:[0-9]+[a-z]|[a-z]+[0-9])[a-z0-9]*$/i, // Numbers and letters, minimum 1 letter and 1 digit.
         brand: /^[a-zA-Z0-9À-ÿ\s]{2,16}$/, // Letters, numbers and spaces. Min 2 characters and max 16
-        onlynumber: /^([0-9]{1,3})$/,
-        onlyletters: /^([a-zA-Z]{3,10})$/
+        onlynumber: /^([0-9]{1,5})$/, // Only numbers, min 1 and 5 max
+        onlyletters: /^([a-zA-Z]{3,10})$/ // Only letters, min 3 and 10 max
     }
 
     const handleChangeCategory = (e) => {
         setCategory(e.target.value);
-        setAttribute1({...attribute1, value: "", flag: "", name: ""});
-        setAttribute2({...attribute2, value: "", flag: "", name: ""});
-        setAttribute3({...attribute3, value: "GB", flag: "", name: ""});
-        setAttribute4({...attribute4, value: "in", flag: "", name: ""});
+        if(e.target.value === "2"){
+            setAttribute1({ ...attribute1, value: "Intel", flag: "", name: "CPU" });
+        }
+        if(e.target.value === "1"){
+            setAttribute1({ ...attribute1, value: "", flag: "", name: "" });
+            setAttribute2({ ...attribute2, value: "LCD", flag: "", name: "screen" });
+        }
+        if(e.target.value === "3"){
+            setAttribute1({ ...attribute1, value: "Leather", flag: "", name: "material" });
+            setAttribute2({ ...attribute2, value: "", flag: "", name: "" });
+        }
+        setAttribute3({ ...attribute3, value: "GB", flag: "", name: "" });
+        setAttribute4({ ...attribute4, value: "in", flag: "", name: "" });
     }
 
-    const handelChangeScreenType = (e) => {
-        setAttribute2({...attribute2, value: e.target.value, name: e.target.name});
+    const handleChangeScreenType = (e) => {
+        setAttribute2({ ...attribute2, value: e.target.value, name: e.target.name });
     }
 
-    const handelChangeUnits = (e) => {
-        setAttribute3({...attribute3, value: e.target.value, name: e.target.name});
+    const handleChangeUnits = (e) => {
+        setAttribute3({ ...attribute3, value: e.target.value, name: e.target.name });
     }
 
-    const handelChangeUnitsNumber = (e) => {
-        setAttribute4({...attribute4, value: e.target.value, name: e.target.name});
+    const handleChangeUnitsNumber = (e) => {
+        setAttribute4({ ...attribute4, value: e.target.value, name: e.target.name });
+    }
+
+    const handleChangeCPU = (e) => {
+        setAttribute1({ ...attribute1, value: e.target.value, name: e.target.name });
     }
 
     const validation = () => {
+        setError(null);
         setValidation(null);
-        if( !(product.flag === 'true') || !(brand.flag === 'true')  || !(sku.flag === 'true') || 
-        !(cost.flag === 'true') || !(attribute1.flag === 'true') ){
+        if (!(product.flag === 'true') || !(brand.flag === 'true') || !(sku.flag === 'true') ||
+            !(cost.flag === 'true') || (attribute2.value === '' && attribute2.flag === 'false') || (attribute1.value === '' && attribute1.flag !== 'true')  ) {
             setValidation(false);
-        }else{
+        } else {
             validateSKU();
         }
     }
 
     const validateSKU = async () => {
-        if(sku.value){
-            await axios.get(base_url+`sku/`+sku.value)
-            .then((res) =>{
-            console.log(res.data.response);
-                if(res.data.response){
-                    setValidationSKU(true);
-                    saveProduct();
-                }else{
-                    setValidationSKU(false);
-                }
-            })
+        if (sku.value) {
+            await axios.get(base_url + `sku/` + sku.value)
+                .then((res) => {
+                    if (res.data.response) {
+                        setValidationSKU(true);
+                        saveProduct();
+                    } else {
+                        setValidationSKU(false);
+                    }
+                })
         }
     }
 
-    const saveProduct = async() => {
-            var InsertArray = 
+    const saveProduct = async () => {
+        var InsertArray =
             [{
                 product_name: product.value,
                 product_sku: sku.value,
                 product_brand: brand.value,
-                product_cost: cost.value,
+                product_cost: parseInt(cost.value),
                 fk_category: category
             }];
-            await axios.post(base_url+`add`,InsertArray)
+        await axios.post(base_url + `add`, InsertArray)
             .then((res) => {
-            console.log(res);
-            insertAttributes(res.data.id);
+                insertAttributes(res.data.id);
             });
     }
 
-    const insertAttributes = async(Insertedid) => {
+    const insertAttributes = async (Insertedid) => {
         var name = attribute2.name;
         var name2 = attribute1.name;
         var union = attribute2.value;
-        if(category === "2"){
-            union = attribute2.value+attribute3.value;
-        }else if(category === "3"){
-            union = attribute2.value+attribute4.value;
+
+        if (category === "2") {
+            union = attribute2.value + attribute3.value;
+        } else if (category === "3") {
+            union = attribute2.value + attribute4.value;
         }
 
-        var AttributesInsert = 
-        [
-            {
-                attribute_category: JSON.stringify({[name]: union
-                     , [name2]: attribute1.value}),
-                fk_product: Insertedid
-            }
-        ]
-        await axios.post(base_url+`add/attributes`, AttributesInsert)
-        .then((res) => {
-            console.log(res);
-            setValidationSKU(null);
-            setValidation(true);
-        });
+        var AttributesInsert =
+            [
+                {
+                    attribute_category: JSON.stringify({
+                        [name]: union
+                        , [name2]: attribute1.value
+                    }),
+                    fk_product: Insertedid
+                }
+            ]
+        await axios.post(base_url + `add/attributes`, AttributesInsert)
+            .then((res) => {
+                if (res.status === 200) {
+                    setValidationSKU(null);
+                    setError(null);
+                    setValidation(true);
+                } else {
+                    setError(true);
+                }
+            });
     }
 
 
@@ -133,7 +154,7 @@ const CreateProduct = () => {
         <div className='container'>
             <div className='d-flex'>
                 <Link className='btn btn-dark mt-4' to="/">
-                    <FontAwesomeIcon icon={faArrowLeft}/>
+                    <FontAwesomeIcon icon={faArrowLeft} />
                 </Link>
             </div>
             <div className='card mt-4'>
@@ -223,7 +244,7 @@ const CreateProduct = () => {
                                                 className="form-control mx-1"
                                                 name="screen"
                                                 id="attribute2"
-                                                onChange={handelChangeScreenType}
+                                                onChange={handleChangeScreenType}
                                                 value={attribute2.value}
                                             >
                                                 <option value="LCD">LCD</option>
@@ -236,16 +257,21 @@ const CreateProduct = () => {
                             }
                             {category === "2" &&
                                 <>
-                                    <ProductInput
-                                        state={attribute1}
-                                        changeState={setAttribute1}
-                                        label="CPU:"
-                                        placeholder="AMD Ryzen 5400"
-                                        name="CPU"
-                                        type="text"
-                                        error="The CPU requires between 3 and 15 characters, only numbers and letters accepted"
-                                        regularExpresion={expression.name}
-                                    />
+                                    <div className="form-group w-25">
+                                        <GroupInput>
+                                            <Label htmlFor="attribute1" >CPU:</Label>
+                                            <Select
+                                                className="form-control mx-1"
+                                                name="CPU"
+                                                id="attribute1"
+                                                value={attribute1.value}
+                                                onChange={handleChangeCPU}
+                                            >
+                                                <option value="Intel">Intel</option>
+                                                <option value="AMD">AMD</option>
+                                            </Select>
+                                        </GroupInput>
+                                    </div>
                                     <ProductInput
                                         state={attribute2}
                                         changeState={setAttribute2}
@@ -264,7 +290,7 @@ const CreateProduct = () => {
                                                 name="attribute2"
                                                 id="attribute2"
                                                 value={attribute3.value}
-                                                onChange={handelChangeUnits}
+                                                onChange={handleChangeUnits}
                                             >
                                                 <option value="GB">GB</option>
                                                 <option value="MB">MB</option>
@@ -275,16 +301,21 @@ const CreateProduct = () => {
                             }
                             {category === "3" &&
                                 <>
-                                    <ProductInput
-                                        state={attribute1}
-                                        changeState={setAttribute1}
-                                        label="Material:"
-                                        placeholder="Lether"
-                                        name="material"
-                                        type="text"
-                                        error="The material requires between 2 and 10 letters, only letters accepted"
-                                        regularExpresion={expression.onlyletters}
-                                    />
+                                    <div className="form-group w-25">
+                                        <GroupInput>
+                                            <Label htmlFor="attribute1" >CPU:</Label>
+                                            <Select
+                                                className="form-control mx-1"
+                                                name="material"
+                                                id="attribute1"
+                                                value={attribute1.value}
+                                                onChange={handleChangeCPU}
+                                            >
+                                                <option value="Lether">Lether</option>
+                                                <option value="Plastic">Plastic</option>
+                                            </Select>
+                                        </GroupInput>
+                                    </div>
                                     <ProductInput
                                         state={attribute2}
                                         changeState={setAttribute2}
@@ -303,7 +334,7 @@ const CreateProduct = () => {
                                                 name="attribute2"
                                                 id="attribute2"
                                                 value={attribute4.value}
-                                                onChange={handelChangeUnitsNumber}
+                                                onChange={handleChangeUnitsNumber}
                                             >
                                                 <option value="in">in</option>
                                                 <option value="cm">cm</option>
@@ -319,22 +350,20 @@ const CreateProduct = () => {
             </div>
             <div className='d-flex justify-content-center align-items-center'>
                 {validationSKU === false && <DuplicatedMessage>
-					<p>
-						<FontAwesomeIcon icon={faExclamation}/>
-						<b>Caution:</b> The SKU its duplicated.
-					</p>
-				</DuplicatedMessage>}
+                        <FontAwesomeIcon icon={faExclamation} />
+                        <b>Caution:</b> The SKU it`s duplicated.
+                </DuplicatedMessage>}
                 {validationForm === false && <ErrorMessage>
-					<p>
-						<FontAwesomeIcon icon={faExclamationTriangle}/>
-						<b>Error:</b> Please fill in the fields correctly.
-					</p>
-				</ErrorMessage>}
+                        <FontAwesomeIcon icon={faExclamationTriangle} />
+                        <b>Error:</b> Please fill in the fields correctly.
+                </ErrorMessage>}
+                {errorQuery === true && <ErrorMessage>
+                        <FontAwesomeIcon icon={faExclamationTriangle} />
+                        <b>Error:</b> Something went wrong. Try again.
+                </ErrorMessage>}
                 {validationForm === true && <SuccessMessage>
-                        <p>
-                            <FontAwesomeIcon icon={faHandPointUp}/>
-						    <b>Success:</b> Product created successfully!
-                        </p>
+                        <FontAwesomeIcon icon={faHandPointUp} />
+                        <b>Success:</b> Product created successfully!
                 </SuccessMessage>}
                 <Button type="submit" className='mt-4 mb-4' onClick={validation}>
                     Create
