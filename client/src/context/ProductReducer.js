@@ -1,6 +1,7 @@
-import { GET_PRODUCTS, SET_ATTRIBUTES } from "./types";
+//Types
+import { GET_CATEGORIES, GET_PRODUCTS, GET_PRODUCTSCAT } from "./types";
 
-export default (state, action) => {
+export default function reducer(state, action) {
   const { payload, type } = action;
 
   switch (type) {
@@ -9,10 +10,15 @@ export default (state, action) => {
         ...state,
         products: payload,
       };
-    case SET_ATTRIBUTES:
+    case GET_CATEGORIES:
       return {
         ...state,
-        attributes: payload,
+        categories: payload,
+      }
+    case GET_PRODUCTSCAT:
+      return {
+        ...state,
+        productsCategory: payload,
       }
     default:
       return state;
