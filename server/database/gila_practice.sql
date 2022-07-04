@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `product` (
     `product_name` VARCHAR(50) NOT NULL,
     `product_sku` VARCHAR(10) NOT NULL,
     `product_brand` VARCHAR(50) NOT NULL,
-    `product_cost` FLOAT(6,5) UNSIGNED NOT NULL,
+    `product_cost` DOUBLE UNSIGNED NOT NULL,
     `fk_category` INT(6) UNSIGNED NOT NULL,
     PRIMARY KEY (`product_id`),
     UNIQUE KEY `product_id_UNIQUE` (`product_id`),
@@ -55,7 +55,11 @@ INSERT INTO `product` (`product_name`, `product_sku`,`product_brand`,`product_co
 ('Samsung 4k','3A','Samsung','8000.00','1'),
 ('Samsung 8k','32A','Samsung','12000.00','1'),
 ('Laptop DELL','32SF','DELL','10000.00','2'),
-('Nike Shoes','33D','NIKE','3000.00','3');
+('Nike Shoes','33D','NIKE','3000.00','3'),
+('Laptop HP','32SA3','HP','500.00','2'),
+('Adidas Shoes','3S3D','Adidas','3000.00','3'),
+('Sony Bravia 4k','33A','Sony','600.00','1'),
+('LG 8k','32SSA','Samsung','1000.00','1');
 
 -- inserting test attributes
 
@@ -63,6 +67,10 @@ INSERT INTO `attributes` ( `attribute_category`, `fk_product`) VALUES
   ('{"screen": "LED", "size": "40"}', '1'),
   ('{"screen": "LCD", "size": "60"}', '2'),
   ('{"CPU": "AMD", "RAM": "8GB"}', '3'),
-  ('{"material": "Leather", "number": "27"}', '4');
+  ('{"material": "Leather", "number": "27"}', '4'),
+  ('{"CPU": "Intel", "RAM": "16GB"}', '5'),
+  ('{"material": "Plastic", "number": "23"}', '6'),
+  ('{"screen": "OLED", "size": "80"}', '7'),
+  ('{"screen": "LED", "size": "50"}', '8');
 
 
